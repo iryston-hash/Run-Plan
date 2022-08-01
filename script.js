@@ -31,16 +31,33 @@ if (navigator.geolocation) {
       console.log(latitude, longitude);
       console.log(`https://www.google.com/maps/@${latitude},${longitude}13z`);
 
-      const coords = [latitude,longitude]
-// Leaflet API
+      const coords = [latitude, longitude];
+      //💾 Leaflet API
       const map = L.map('map').setView(coords, 13);
+      console.log(map);
+      L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {}
+      ).addTo(map);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      }).addTo(map);
-
-      L.marker(coords)
-        .addTo(map)
-        .openPopup();
+      map.on('click', function (mapEvent) {
+        console.log(mapEvent);
+        const { lat, lng } = mapEvent.latlng;
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              maxWidth: 250,
+              minWidth: 100,
+              autoClose: false,
+              closeOnClick: false,
+              className: 'running-popup',
+            })
+          )
+          .setPopupContent('Location')
+          .openPopup();
+      });
+      Approximate;
     },
     function () {
       alert('could not get your location');
