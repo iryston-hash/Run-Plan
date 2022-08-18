@@ -23,18 +23,42 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+class Workout {
+  date = new Date();
+  id = (Date.now() + '').slice(-10);
 
-
-class Workout{
-  date = new Date()
-  
   constructor(coords, distance, duration) {
-    this.coords = coords
-    this.distance = distance
-    this.duration = duration
+    this.coords = coords;
+    this.distance = distance;
+    this.duration = duration;
   }
 }
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+    this.calcPace();
+  }
+  calcPace() {
+    this.pace = this.duration / this.distance;
+  }
+}
+class Cycling extends Workout {
+  constructor(coords, distance, duration, elevationGain) {
+    super(coords, distance, duration);
+    this.elevationGain = elevationGain;
+    this.calcSpeed();
+  }
+  calcSpeed() {
+    this.speed = this.disatance / (this.duration / 60);
+    return this.speed;
+  }
+}
+const run1 = new Running([52, 30], 5, 21, 180);
+const cycling1 = new Cycling([52, 30], 5, 21, 222);
+console.log(run1, cycling1);
 
+// Arc
 class App {
   #map;
   #mapEvent;
@@ -86,7 +110,37 @@ class App {
   }
 
   _newWorkout(e) {
+    // helpers
+    const validInputs = (...inputs) =>
+      inputs.every(inp => Number.isFinite(inp));
+    const allPositive = (...inputs) => inputs.every(inp => inp > 0);
+
     e.preventDefault();
+
+    //
+    const type = inputType.value;
+    const distance = +inputDistance.value;
+    const duration = +inputDuration.value;
+    const alertInput = alert('Inputs must be positive numbers');
+
+    if (type === 'running') {
+      const cadence = +inputCadence.value;
+      if (
+        !validInputs(distance, duration, cadence) ||
+        !allPositive(distance, duration, elevation)
+      )
+        return alertInput;
+
+      // if(!Number.isFinite(distance) ||!Number.isFinite(duration) || !Number.isFinite(cadence)) return alert('Inputs must contain positive Numbers')
+    }
+    if (type === 'cycling') {
+      if (
+        !validInputs(distance, duration, elevation) ||
+        !allPositive(distance, duration)
+      )
+        return alertInput;
+    }
+
     // clear fields
     inputDistance.value =
       inputDuration.value =
@@ -112,53 +166,6 @@ class App {
 }
 
 const app = new App();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // if (navigator.geolocation) {
 //   navigator.geolocation.getCurrentPosition(
@@ -203,29 +210,24 @@ const app = new App();
 //   );
 // }
 
-
-  //   this.#mapEvent = mapE;
-  //   form.classList.remove('hidden');
-  //   inputDistance.focus();
-  //   console.log(mapEvent);
-  //   const { lat, lng } = mapEvent.latlng;
-  //   L.marker([lat, lng])
-  //     .addTo(this.#map)
-  //     .bindPopup(
-  //       L.popup({
-  //         maxWidth: 250,
-  //         minWidth: 100,
-  //         autoClose: false,
-  //         closeOnClick: false,
-  //         className: 'running-popup',
-  //       })
-  //     )
-  //     .setPopupContent('Location')
-  //     .openPopup();
-
-
-
-
+//   this.#mapEvent = mapE;
+//   form.classList.remove('hidden');
+//   inputDistance.focus();
+//   console.log(mapEvent);
+//   const { lat, lng } = mapEvent.latlng;
+//   L.marker([lat, lng])
+//     .addTo(this.#map)
+//     .bindPopup(
+//       L.popup({
+//         maxWidth: 250,
+//         minWidth: 100,
+//         autoClose: false,
+//         closeOnClick: false,
+//         className: 'running-popup',
+//       })
+//     )
+//     .setPopupContent('Location')
+//     .openPopup();
 
 // form.addEventListener('submit', function (e) {
 //   e.preventDefault();
