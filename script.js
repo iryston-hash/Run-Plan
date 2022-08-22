@@ -318,7 +318,6 @@ const app = new App();
 //   this.#mapEvent = mapE;
 //   form.classList.remove('hidden');
 //   inputDistance.focus();
-//   console.log(mapEvent);
 //   const { lat, lng } = mapEvent.latlng;
 //   L.marker([lat, lng])
 //     .addTo(this.#map)
