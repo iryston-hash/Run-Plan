@@ -11,7 +11,6 @@ const inputElevation = document.querySelector('.form__input--elevation');
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
-  // clicks = 0;
 
   constructor(coords, distance, duration) {
     this.coords = coords;
@@ -26,9 +25,6 @@ class Workout {
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
   }
-  // click() {
-  //   this.clicks++;
-  // }
 }
 class Running extends Workout {
   type = 'running';
@@ -55,8 +51,6 @@ class Cycling extends Workout {
     return this.speed;
   }
 }
-// const run1 = new Running([52, 30], 5, 21, 180);
-// const cycling1 = new Cycling([52, 30], 5, 21, 222);
 
 // Arc
 class App {
@@ -71,7 +65,6 @@ class App {
     // local storage
     this._getLocalStorage();
 
-    // events
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
@@ -91,13 +84,9 @@ class App {
     {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
-      // console.log(latitude, longitude);
-      // console.log(`https://www.google.com/maps/@${latitude},${longitude}13z`);
 
       const coords = [latitude, longitude];
-      //💾 Leaflet API
       this.#map = L.map('map').setView(coords, this.#mapZoom);
-      // console.log(map);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(
         this.#map
       );
@@ -135,7 +124,6 @@ class App {
     const validInputs = (...inputs) =>
       inputs.every(inp => Number.isFinite(inp));
     const allPositive = (...inputs) => inputs.every(inp => inp > 0);
-    //
     const type = inputType.value;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
@@ -150,8 +138,6 @@ class App {
       )
         return alert('input must be positive');
       workout = new Running([lat, lng], distance, duration, cadence);
-
-      // if(!Number.isFinite(distance) ||!Number.isFinite(duration) || !Number.isFinite(cadence)) return alert('Inputs must contain positive Numbers')
     }
     if (type === 'cycling') {
       const elevation = +inputElevation.value;
@@ -163,7 +149,6 @@ class App {
       workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     this.#workouts.push(workout);
-    // console.log(workout);
     //render workout
     this._renderWorkoutMarker(workout);
     this._renderWorkout(workout);
@@ -237,7 +222,6 @@ class App {
   }
   _moveToPopup(e) {
     const workoutEl = e.target.closest('.workout');
-    // console.log(workoutEl);
     if (!workoutEl) return;
 
     const workout = this.#workouts.find(
@@ -250,14 +234,12 @@ class App {
         duration: 1.2,
       },
     });
-    // workout.click();
   }
   _setLocalStorage() {
     localStorage.setItem('workouts', JSON.stringify(this.#workouts));
   }
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
-    // console.log(data);
     if (!data) return;
     this.#workouts = data;
     this.#workouts.forEach(work => {
